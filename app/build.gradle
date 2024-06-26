@@ -16,7 +16,7 @@ repositories {
 }
 
 compileJava {
-    options.release = 17
+    options.release = 21
 }
 
 dependencies {
@@ -36,7 +36,7 @@ test {
 }
 
 testlogger {
-    showStandardStreams true
+    showStandardStreams = true
 }
 
 jacocoTestReport {
@@ -46,5 +46,5 @@ jacocoTestReport {
 }
 
 checkstyle {
-    toolVersion '9.2.1'
+    toolVersion '10.12.4'
 }
