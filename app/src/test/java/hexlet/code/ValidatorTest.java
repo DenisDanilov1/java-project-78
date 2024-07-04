@@ -86,7 +86,7 @@ public class ValidatorTest {
         Validator v = new Validator();
         MapSchema schema = v.map();
 
-        Map<String, BaseSchema> schemas = new HashMap<>();
+        HashMap<String, BaseSchema> schemas = new HashMap<>();
         schemas.put("name", v.string().required());
         schemas.put("age", v.number().positive());
         schema.shape(schemas);
