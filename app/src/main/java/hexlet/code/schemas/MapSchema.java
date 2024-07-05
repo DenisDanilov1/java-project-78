@@ -19,7 +19,7 @@ public class MapSchema extends BaseSchema<Map<String, String>> {
     }
 
     public MapSchema shape(Map<String, BaseSchema<String>> shemas) {
-       checks.put("shape", map -> {
+        checks.put("shape", map -> {
             for (var entry : shemas.entrySet()) {
                 String st = map.get(entry.getKey());
                 if (!entry.getValue().isValid(st)) {
