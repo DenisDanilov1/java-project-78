@@ -1,32 +1,33 @@
 package hexlet.code.schemas;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
-public class MapSchema extends BaseSchema {
+public class MapSchema extends BaseSchema<Map<String, String>> {
 
-    public final MapSchema required() {
-        addCondition(map -> map instanceof Map<?, ?> && map != null);
-        setRequiredOn();
+    public MapSchema required() {
+        Predicate<Map<String, String>> required = Objects::nonNull;
+        checks.put("required", required);
         return this;
     }
 
-    public final MapSchema sizeof(int givenMap) {
-        addCondition(map -> map instanceof Map && ((Map<?, ?>) map).size() == givenMap);
+    public MapSchema sizeof(int size) {
+        Predicate<Map<String, String>> mapSize = map -> map.size() >= size;
+        checks.put("sizeof", mapSize);
         return this;
     }
 
-    public final MapSchema shape(Map<String, BaseSchema> map) {
-        addCondition(newMap -> chekingMap((Map<String, BaseSchema>) newMap, map));
-        return this;
-    }
-
-    private boolean chekingMap(Map<String, BaseSchema> orig, Map<String, BaseSchema> shapedMap) {
-        for (Map.Entry<String, BaseSchema> map : shapedMap.entrySet()) {
-            String key = map.getKey();
-            if (!map.getValue().isValid(orig.get(key))) {
-                return false;
+    public MapSchema shape(Map<String, BaseSchema<String>> shemas) {
+       checks.put("shape", map -> {
+            for (var entry : shemas.entrySet()) {
+                String st = map.get(entry.getKey());
+                if (!entry.getValue().isValid(st)) {
+                    return false;
+                }
             }
-        }
-        return true;
+            return true;
+        });
+        return this;
     }
 }

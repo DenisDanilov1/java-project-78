@@ -40,25 +40,26 @@ public class ValidatorTest {
     public void testNumberSchema() {
         Validator v = new Validator();
         NumberSchema schema = v.number();
-        final int min = 2;
-        final int max = 17;
-
-        assertTrue(schema.isValid(null));
+        assertTrue(schema.isValid(""));
+        assertTrue(schema.isValid("string"));
 
         schema.required();
+
+        assertFalse(schema.isValid(""));
         assertFalse(schema.isValid(null));
-        assertFalse(schema.isValid("5"));
-        assertTrue(schema.isValid(10));
+        assertTrue(schema.isValid(5));
 
-        assertTrue(schema.positive().isValid(10));
-        assertFalse(schema.isValid(-10));
+        schema.positive();
 
-        schema.range(min, max);
-        assertTrue(schema.isValid(2));
-        assertTrue(schema.isValid(16));
-        assertFalse(schema.isValid(19));
+        assertTrue(schema.isValid(5));
         assertFalse(schema.isValid(-5));
 
+        schema.range(1, 10);
+
+        assertTrue(schema.isValid(1));
+        assertTrue(schema.isValid(10));
+        assertTrue(schema.isValid(6));
+        assertFalse(schema.isValid(11));
     }
 
     @Test
@@ -86,29 +87,29 @@ public class ValidatorTest {
         Validator v = new Validator();
         MapSchema schema = v.map();
 
-        HashMap<String, BaseSchema> schemas = new HashMap<>();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
         schemas.put("name", v.string().required());
         schemas.put("age", v.number().positive());
         schema.shape(schemas);
 
-        Map<String, Object> human1 = new HashMap<>();
+        Map<String, String> human1 = new HashMap<>();
         human1.put("name", "Maks");
-        human1.put("age", 100);
+        human1.put("age", "100");
         assertTrue(schema.isValid(human1));
 
-        Map<String, Object> human2 = new HashMap<>();
+        Map<String, String> human2 = new HashMap<>();
         human2.put("name", "Maria");
         human2.put("age", null);
         assertTrue(schema.isValid(human2));
 
-        Map<String, Object> human3 = new HashMap<>();
+        Map<String, String> human3 = new HashMap<>();
         human3.put("name", "");
         human3.put("age", null);
         assertFalse(schema.isValid(human3));
 
-        Map<String, Object> human4 = new HashMap<>();
+        Map<String, String> human4 = new HashMap<>();
         human4.put("name", "Anna");
-        human4.put("age", -5);
+        human4.put("age", "-5");
         assertFalse(schema.isValid(human4));
     }
 }
