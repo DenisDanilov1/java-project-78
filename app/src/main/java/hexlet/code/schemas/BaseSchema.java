@@ -12,7 +12,7 @@ public abstract class BaseSchema<T> {
         if (checks.isEmpty()) {
             return true;
         }
-        for (var predicate : checks.values()) {
+        for (Predicate<T> predicate : checks.values()) {
             if (!predicate.test(t)) {
                 return false;
             }
